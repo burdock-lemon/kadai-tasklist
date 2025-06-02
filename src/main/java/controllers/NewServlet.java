@@ -3,9 +3,8 @@
 package controllers;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 
-import jakarta.persistence.EntityManager;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import models.Task;
-import utils.DBUtil;
 
 /**
  * Servlet implementation class NewServlet
@@ -34,24 +32,12 @@ public class NewServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        EntityManager em = DBUtil.createEntityManager();
-        em.getTransaction().begin();
+        request.setAttribute("_token", request.getSession().getId());
         
-        Task t = new Task();
-        
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        t.setCreated_at(currentTime);
-        t.setUpdated_at(currentTime);
-        
-        String content = "nice to meet you";
-        t.setContent(content);
-        
-        em.persist(t);
-        em.getTransaction().commit();
-        
-        response.getWriter().append(Integer.valueOf(t.getId()).toString());
-        
-        em.close();
+        request.setAttribute("task", new Task());
+
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/new.jsp");
+        rd.forward(request, response);
     }
 
 }
