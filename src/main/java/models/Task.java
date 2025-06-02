@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 /**
@@ -14,7 +16,13 @@ import jakarta.persistence.Table;
  * tasklistに入る情報を保持するDTO
  */
 @Entity
-@Table(name = "tasklist")
+@NamedQueries({
+    @NamedQuery(
+        name = "getAllTasks",
+        query = "SELECT t FROM Task AS t ORDER BY t.id DESC"
+    )
+})
+@Table(name = "tasks")
 public class Task {
     
     @Id
@@ -25,10 +33,10 @@ public class Task {
     @Column(name = "created_at", nullable = false)
     private Timestamp created_at;
     
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private Timestamp updated_at;
     
-    @Column(name = "content")
+    @Column(name = "content", nullable = false)
     private String content;
     
     // getterとsetter

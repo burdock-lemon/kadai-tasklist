@@ -1,12 +1,17 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.List;
 
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import models.Task;
+import utils.DBUtil;
 
 /**
  * Servlet implementation class IndexServlet
@@ -27,7 +32,12 @@ public class IndexServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        response.getWriter().append("Served at: ").append(request.getContextPath());
+        EntityManager em = DBUtil.createEntityManager();
+        
+        // DBに問い合わせる
+        List<Task> tasks = em.createNamedQuery("getAllTasks", Task.class).getResultList();
+        response.getWriter().append(Integer.valueOf(tasks.size()).toString());
+        
     }
 
 }
